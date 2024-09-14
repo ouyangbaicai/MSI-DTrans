@@ -2,7 +2,6 @@
 你可以在此处下载所有代码(You can download all the code in this branch)  
 
 # ----------------------Attention----------------------  
-DISPLAYS reinvestment  
-For learning and communication purposes only, do not plagiarize achievements  
-DISPLAY期刊再投  
-仅供学习交流，切勿剽窃成果  
+MSI-DTrans: a multi-focus image fusion using multilayer semantic interaction and dynamic transformer
+Welcome to download the learning exchange, the article is about to go online.
+欢迎下载学习交流，文章即将上线。
