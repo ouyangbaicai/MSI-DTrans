@@ -15,7 +15,7 @@ from Utilities.CUDA_Check import GPUorCPU
 DEVICE = GPUorCPU.DEVICE
 
 
-def dwt_init(x):
+def haar_filter(x):
     x01 = x[:, :, 0::2, :] / 2
     x02 = x[:, :, 1::2, :] / 2
     x1 = x01[:, :, :, 0::2]
@@ -31,44 +31,18 @@ def dwt_init(x):
     return x_LL, x_HL, x_LH, x_HH
 
 
-
-# def dwt_init(x):
-#     _, _, h, w = x.shape
-#     x01 = torch.floor(x[:, :, 0::2, :] / 2)
-#     x02 = torch.ceil(x[:, :, 1::2, :] / 2)
-#     _, _, h1, w1 = x01.shape
-#     _, _, h2, w2 = x02.shape
-#     x1 = x01[:, :, :, 0::2]
-#     x2 = x02[:, :, :, 0::2]
-#     x3 = x01[:, :, :, 1::2]
-#     x4 = x02[:, :, :, 1::2]
-#     print('x01:' + str(x01[:, :, :, 0::2].shape))
-#     print('x02:' + str(x02[:, :, :, 0::2].shape))
-#     # print('x1:' + str(x1.shape))
-#     # print('x2:' + str(x2.shape))
-#     # print('x3:' + str(x3.shape))
-#     # print('x4:' + str(x4.shape))
-#     x_LL = x1 + x2 + x3 + x4
-#     x_HL = -x1 - x2 + x3 + x4
-#     x_LH = -x1 + x2 - x3 + x4
-#     x_HH = x1 - x2 - x3 + x4
-#
-#
-#     return x_LL, x_HL, x_LH, x_HH
-
-
-class DWT(nn.Module):
+class SS_Block(nn.Module):
     def __init__(self):
-        super(DWT, self).__init__()
+        super(SS_Block, self).__init__()
         self.requires_grad = False
 
     def forward(self, x):
-        return dwt_init(x)
+        return haar_filter(x)
 
 
-class Attention1(nn.Module):
+class MSSE_Attention(nn.Module):
     def __init__(self, channels):
-        super(Attention1, self).__init__()
+        super(MSSE_Attention, self).__init__()
         self.conv = nn.Conv2d(channels, channels, kernel_size=1)
         self.bn = nn.BatchNorm2d(channels)
         self.fc = nn.Linear(channels, channels)
@@ -100,9 +74,9 @@ class ParallelBlock(nn.Module):
         return out
 
 
-class FMGIE_Module(nn.Module):
+class MSSE_Module(nn.Module):
     def __init__(self, in_channels, out_channels):
-        super(FMGIE_Module, self).__init__()
+        super(MSSE_Module, self).__init__()
         self.conv = nn.Sequential(
             nn.Conv2d(in_channels, 16, kernel_size=3, padding=1),
             nn.BatchNorm2d(16),
@@ -111,12 +85,12 @@ class FMGIE_Module(nn.Module):
             nn.BatchNorm2d(out_channels),
             nn.Mish(inplace=True)
         )
-        self.attention = Attention1(out_channels)
+        self.attention = MSSE_Attention(out_channels)
         self.residual = nn.Conv2d(in_channels, out_channels, kernel_size=1)
         self.parallel = ParallelBlock(out_channels)
         self.skip_connection = nn.Conv2d(in_channels, out_channels*3, kernel_size=1)
         self.channel_splitter = nn.Conv2d(out_channels*3, out_channels, kernel_size=1)
-        self.filter = DWT()
+        self.filter = SS_Block()
         self.high_layer = nn.Sequential(
             nn.Conv2d(out_channels*3, out_channels, kernel_size=1, stride=1),
             nn.BatchNorm2d(out_channels),
@@ -145,9 +119,9 @@ class FMGIE_Module(nn.Module):
         return x_low, x_high, conn_x
 
 
-class FMGIE_Module_high(nn.Module):
+class FSE_Module(nn.Module):
     def __init__(self, in_channels):
-        super(FMGIE_Module_high, self).__init__()
+        super(FSE_Module, self).__init__()
         self.bottleneck = nn.Sequential(
             nn.Conv2d(in_channels, in_channels*2, kernel_size=3, padding=1, stride=1),
             nn.BatchNorm2d(in_channels*2),
@@ -156,7 +130,7 @@ class FMGIE_Module_high(nn.Module):
             nn.BatchNorm2d(in_channels),
             nn.Mish(inplace=True),
         )
-        self.filter = DWT()
+        self.filter = ()
         self.high_layer = nn.Sequential(
             nn.Conv2d(in_channels*3, in_channels, kernel_size=1, stride=1),
             nn.BatchNorm2d(in_channels),
@@ -179,9 +153,9 @@ class FMGIE_Module_high(nn.Module):
         return x_low, x_high
 
 
-class FMGIE_Module_low(nn.Module):
+class RSE_Module(nn.Module):
     def __init__(self, in_channels):
-        super(FMGIE_Module_low, self).__init__()
+        super(RSE_Module, self).__init__()
         # 第一条线路
         self.path1 = nn.Conv2d(in_channels, in_channels, kernel_size=3, padding=1)
         self.path2 = nn.Conv2d(in_channels, in_channels, kernel_size=1)
@@ -204,7 +178,7 @@ class FMGIE_Module_low(nn.Module):
             nn.BatchNorm2d(in_channels, eps=1e-5),
             nn.Mish(inplace=True),
         )
-        self.filter = DWT()
+        self.filter = SS_Block()
         self.high_layer = nn.Sequential(
             nn.Conv2d(in_channels*3, in_channels, kernel_size=1, stride=1),
             nn.BatchNorm2d(in_channels, eps=1e-5),
@@ -224,12 +198,14 @@ class FMGIE_Module_low(nn.Module):
         sub2 = torch.cat([out3, sub2], dim=1)
         x = self.layer(torch.cat([sub1, sub2], dim=1))
         x = x + residual
+        #等价ss-block-开始
         coeffs2 = pywt.dwt2(x.cpu().detach().numpy(), 'haar', mode='zero')  # 二维离散小波变换
         cA, (cH, cV, cD) = coeffs2  # cA:低频部分，cH:水平高频部分，cV:垂直高频部分，cD:对角线高频部分
         cA_tensor = torch.from_numpy(cA).to(x.device)
         cH_tensor = torch.from_numpy(cH).to(x.device)
         cV_tensor = torch.from_numpy(cV).to(x.device)
         cD_tensor = torch.from_numpy(cD).to(x.device)
+        #等价ss-block-结束
         x_low = cA_tensor
         x_high = torch.cat([cH_tensor, cV_tensor, cD_tensor], dim=1)
         x_high = self.high_layer(x_high)
@@ -341,6 +317,7 @@ class FeedForward(nn.Module):
 
 class Transformer(nn.Module):
     def __init__(self, dim, proj_kernel, kv_proj_stride, depth, dim_head, scale_factor, mlp_mult=4, dropout=0.):
+        #dim=64, proj_kernel=3, kv_proj_stride=1, depth=2, scale_factor=[1, 2, 4], mlp_mult=8, dim_head=64, dropout=dropout
         super().__init__()
         self.layers = nn.ModuleList([])
         for _ in range(depth):
@@ -419,11 +396,11 @@ class Network(nn.Module):
     def __init__(self, img_channels=3, dropout=0.):
         super().__init__()
 
-        self.Encoder1 = FMGIE_Module(img_channels, 32)
-        self.Encoder2_high = FMGIE_Module_high(32)
-        self.Encoder2_low = FMGIE_Module_low(32)
-        self.Encoder3_high = FMGIE_Module_high(48)
-        self.Encoder3_low = FMGIE_Module_low(48)
+        self.Encoder1 = MSSE_Module(img_channels, 32)
+        self.Encoder2_high = RSE_Module(32)
+        self.Encoder2_low = FSE_Module(32)
+        self.Encoder3_high = RSE_Module(48)
+        self.Encoder3_low = FSE_Module(48)
 
         self.down1 = Downsample(64, 32, kernel_size=1, stride=1, padding=0)
         self.down2 = Downsample(64, 48, kernel_size=1, stride=1, padding=0)
@@ -519,7 +496,6 @@ class Network(nn.Module):
         D = self.up(D, h, w)
         D = self.ReconstructD(D)
 
-
         return D
 
 
@@ -533,3 +509,4 @@ if __name__ == '__main__':
     flops, params = clever_format([flops, params], "%.3f")
     print('flops: {}, params: {}'.format(flops, params))
     NetOutDM = model(test_tensor_A, test_tensor_B)
+    print(NetOutDM.shape)
