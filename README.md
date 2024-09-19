@@ -4,10 +4,10 @@
 # ----------------------Attention----------------------  
 MSI-DTrans: a multi-focus image fusion using multilayer semantic interaction and dynamic transformer  
 @article{zhai2024msi,
-  title={MSI-DTrans: A multi-focus image fusion using multilayer semantic interaction and dynamic transformer},
-  author={Zhai, Hao and Ouyang, Yuncan and Luo, Nannan and Chen, Lianhua and Zeng, Zhi},
-  journal={Displays},
-  pages={102837},
-  year={2024},
-  publisher={Elsevier}
+  title={MSI-DTrans: A multi-focus image fusion using multilayer semantic interaction and dynamic transformer},  
+  author={Zhai, Hao and Ouyang, Yuncan and Luo, Nannan and Chen, Lianhua and Zeng, Zhi},  
+  journal={Displays},  
+  pages={102837},  
+  year={2024},  
+  publisher={Elsevier}  
 }
