@@ -5,6 +5,7 @@ MSI-DTrans: a multi-focus image fusion using multilayer semantic interaction and
 # ------------------Reference information--------------------  
 如果我们的工作对您有所启发，欢迎引用以下信息。  
 If this work is helpful to you, please citing our work as follows:  
+  
 Zhai H, Ouyang Y, Luo N, et al. MSI-DTrans: A multi-focus image fusion using multilayer semantic interaction and dynamic transformer[J]. Displays, 2024: 102837.  
   
 or
