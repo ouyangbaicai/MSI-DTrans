@@ -8,27 +8,10 @@ from einops import rearrange
 from thop import profile, clever_format
 from torch import nn, einsum
 from torch.nn import functional as F
-from torchvision import transforms
 
 from Utilities.CUDA_Check import GPUorCPU
 
 DEVICE = GPUorCPU.DEVICE
-
-
-def haar_filter(x):
-    x01 = x[:, :, 0::2, :] / 2
-    x02 = x[:, :, 1::2, :] / 2
-    x1 = x01[:, :, :, 0::2]
-    x2 = x02[:, :, :, 0::2]
-    x3 = x01[:, :, :, 1::2]
-    x4 = x02[:, :, :, 1::2]
-    x_LL = x1 + x2 + x3 + x4
-    x_HL = -x1 - x2 + x3 + x4
-    x_LH = -x1 + x2 - x3 + x4
-    x_HH = x1 - x2 - x3 + x4
-
-
-    return x_LL, x_HL, x_LH, x_HH
 
 
 class SS_Block(nn.Module):
@@ -37,7 +20,9 @@ class SS_Block(nn.Module):
         self.requires_grad = False
 
     def forward(self, x):
-        return haar_filter(x)
+        coeffs2 = pywt.dwt2(x.cpu().detach().numpy(), 'haar', mode='zero')  # 二维离散小波变换
+        cA, (cH, cV, cD) = coeffs2  # cA:低频部分，cH:水平高频部分，cV:垂直高频部分，cD:对角线高频部分
+        return cA, (cH, cV, cD)
 
 
 class MSSE_Attention(nn.Module):
@@ -90,7 +75,7 @@ class MSSE_Module(nn.Module):
         self.parallel = ParallelBlock(out_channels)
         self.skip_connection = nn.Conv2d(in_channels, out_channels*3, kernel_size=1)
         self.channel_splitter = nn.Conv2d(out_channels*3, out_channels, kernel_size=1)
-        self.filter = SS_Block()
+        self.SS_Block = SS_Block()
         self.high_layer = nn.Sequential(
             nn.Conv2d(out_channels*3, out_channels, kernel_size=1, stride=1),
             nn.BatchNorm2d(out_channels),
@@ -106,9 +91,7 @@ class MSSE_Module(nn.Module):
         out = self.parallel(out)
         out = out + self.skip_connection(x)
         out = self.channel_splitter(out)
-        # cA, (cH, cV, cD) = self.filter(out)
-        coeffs2 = pywt.dwt2(out.cpu().detach().numpy(), 'haar', mode='zero')  # 二维离散小波变换
-        cA, (cH, cV, cD) = coeffs2  # cA:低频部分，cH:水平高频部分，cV:垂直高频部分，cD:对角线高频部分
+        cA, (cH, cV, cD) = self.SS_Block(out)
         cA_tensor = torch.from_numpy(cA).to(x.device)
         cH_tensor = torch.from_numpy(cH).to(x.device)
         cV_tensor = torch.from_numpy(cV).to(x.device)
@@ -130,7 +113,7 @@ class FSE_Module(nn.Module):
             nn.BatchNorm2d(in_channels),
             nn.Mish(inplace=True),
         )
-        self.filter = ()
+        self.SS_Block = SS_Block()
         self.high_layer = nn.Sequential(
             nn.Conv2d(in_channels*3, in_channels, kernel_size=1, stride=1),
             nn.BatchNorm2d(in_channels),
@@ -141,8 +124,7 @@ class FSE_Module(nn.Module):
         residual = x
         x = self.bottleneck(x)
         x = x + residual
-        coeffs2 = pywt.dwt2(x.cpu().detach().numpy(), 'haar', mode='zero')  # 二维离散小波变换
-        cA, (cH, cV, cD) = coeffs2  # cA:低频部分，cH:水平高频部分，cV:垂直高频部分，cD:对角线高频部分
+        cA, (cH, cV, cD) = self.SS_Block(x)
         cA_tensor = torch.from_numpy(cA).to(x.device)
         cH_tensor = torch.from_numpy(cH).to(x.device)
         cV_tensor = torch.from_numpy(cV).to(x.device)
@@ -178,7 +160,7 @@ class RSE_Module(nn.Module):
             nn.BatchNorm2d(in_channels, eps=1e-5),
             nn.Mish(inplace=True),
         )
-        self.filter = SS_Block()
+        self.SS_Block = SS_Block()
         self.high_layer = nn.Sequential(
             nn.Conv2d(in_channels*3, in_channels, kernel_size=1, stride=1),
             nn.BatchNorm2d(in_channels, eps=1e-5),
@@ -198,14 +180,11 @@ class RSE_Module(nn.Module):
         sub2 = torch.cat([out3, sub2], dim=1)
         x = self.layer(torch.cat([sub1, sub2], dim=1))
         x = x + residual
-        #等价ss-block-开始
-        coeffs2 = pywt.dwt2(x.cpu().detach().numpy(), 'haar', mode='zero')  # 二维离散小波变换
-        cA, (cH, cV, cD) = coeffs2  # cA:低频部分，cH:水平高频部分，cV:垂直高频部分，cD:对角线高频部分
+        cA, (cH, cV, cD) = self.SS_Block(x)
         cA_tensor = torch.from_numpy(cA).to(x.device)
         cH_tensor = torch.from_numpy(cH).to(x.device)
         cV_tensor = torch.from_numpy(cV).to(x.device)
         cD_tensor = torch.from_numpy(cD).to(x.device)
-        #等价ss-block-结束
         x_low = cA_tensor
         x_high = torch.cat([cH_tensor, cV_tensor, cD_tensor], dim=1)
         x_high = self.high_layer(x_high)
@@ -500,8 +479,8 @@ class Network(nn.Module):
 
 
 if __name__ == '__main__':
-    test_tensor_A = torch.rand((1, 3, 224, 224)).to(DEVICE)
-    test_tensor_B = torch.rand((1, 3, 224, 224)).to(DEVICE)
+    test_tensor_A = torch.rand((1, 3, 520, 520)).to(DEVICE)
+    test_tensor_B = torch.rand((1, 3, 520, 520)).to(DEVICE)
     model = Network().to(DEVICE)
     model(test_tensor_A, test_tensor_B)
     print(model)
