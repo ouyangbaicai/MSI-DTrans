@@ -96,7 +96,6 @@ class Fusion:
                 A = cv2.imread(eval_list_A[cnt - 1])
                 B = cv2.imread(eval_list_B[cnt - 1])
                 IniF = A * D + B * (1 - D)
-                cv2.imwrite('./Results' + savepath + '/' + self.DATASET_NAME + '-' + str(cnt).zfill(2) + '-dm.png', D * 255)
                 cv2.imwrite('./Results' + savepath + '/' + self.DATASET_NAME + '-' + str(cnt).zfill(2) + '.png', IniF)
                 cnt += 1
                 running_time.append(time.time() - start_time)
