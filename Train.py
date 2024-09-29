@@ -18,7 +18,7 @@ class NetTrain:
     def __init__(self,
                  data_path='your dir',
                  set_size=7866,
-                 batchsize=2,
+                 batchsize=8,
                  epochs=200,
                  lr=0.0002,
                  gamma=0.88,
