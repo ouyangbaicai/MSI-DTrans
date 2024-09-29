@@ -328,24 +328,6 @@ class conv3x3(nn.Module):
         x = self.conv3x3(x)
         return x
 
-
-# class conv3x3(nn.Module):
-#     def __init__(self, input_dim, output_dim, stride=1):
-#         super().__init__()
-#         self.conv3x3 = nn.Sequential(
-#             nn.Conv2d(input_dim, input_dim//2, kernel_size=3, stride=stride, padding=1, bias=False),
-#             nn.BatchNorm2d(input_dim//2),
-#             nn.ReLU(inplace=True),
-#             nn.Conv2d(input_dim//2, output_dim, kernel_size=3, stride=stride, padding=1, bias=False),
-#             nn.BatchNorm2d(output_dim),
-#             nn.ReLU(inplace=True),
-#         )
-#
-#     def forward(self, x):
-#         x = self.conv3x3(x)
-#         return x
-
-
 class Downsample(nn.Module):
     def __init__(self, dim_in, dim_out, kernel_size, stride, padding):
         super().__init__()
@@ -355,7 +337,6 @@ class Downsample(nn.Module):
         )
 
     def forward(self, x):
-        # x = self.rb(x)
         x = self.down_conv(x)
         return x
 
@@ -487,5 +468,5 @@ if __name__ == '__main__':
     flops, params = profile(model, inputs=(test_tensor_A, test_tensor_B))
     flops, params = clever_format([flops, params], "%.3f")
     print('flops: {}, params: {}'.format(flops, params))
-    NetOutDM = model(test_tensor_A, test_tensor_B)
-    print(NetOutDM.shape)
+    Pre = model(test_tensor_A, test_tensor_B)
+    print(Pre.shape)
