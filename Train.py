@@ -92,7 +92,7 @@ class NetTrain:
         loss_ssim = SSIM()
         loss_L1 = nn.L1Loss()
         loss_dice = DiceLoss()
-        loss = loss_L1(NetOut, GT) + loss_dice(NetOut, GT) + (1 - loss_ssim(GT, NetOut).item())
+        loss = 0.7*loss_L1(NetOut, GT) + 0.1*loss_dice(NetOut, GT) + 0.2*(1 - loss_ssim(GT, NetOut).item())
         return loss
 
     def TrainingProcess(self, model, optimizer, scheduler, train_loader, valid_loader, epochs, lmd):
