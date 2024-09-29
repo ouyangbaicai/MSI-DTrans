@@ -25,9 +25,10 @@ class Fusion:
     def __init__(self,
                  modelpath='best_network.ckpt',
                  # modelpath='RunTimeData/2023-04-08 23.01.10/model44.ckpt',
-                 dataroot='D:\code\python\MSI-DTrans\Datasets\Eval',
-                 # dataroot='./Datasets/Eval',
+                 dataroot='./Datasets/Eval',
                  dataset_name='Lytro',
+                 # 修改此处即可测试其他数据集
+                 # Modify here to test other datasets
                  threshold=0.001,
                  window_size=5,
                  ):
