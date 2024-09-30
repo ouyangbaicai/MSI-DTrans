@@ -6,8 +6,8 @@ from Utilities.CUDA_Check import GPUorCPU
 
 DEVICE = GPUorCPU.DEVICE
 
-# def Binarization(img_tensor):
-#     return torch.where(img_tensor > 0.5, 1., 0.)
+def Binarization(img_tensor):
+    return torch.where(img_tensor > 0.5, 1., 0.)
 
 def RemoveSmallArea(img_tensor, size=None, threshold=0.001):
     if size is None:
