@@ -23,7 +23,7 @@ class ZeroOneNormalize(object):
 
 class Fusion:
     def __init__(self,
-                 modelpath='best_network.ckpt',
+                 modelpath='Inference_model.ckpt',
                  # modelpath='RunTimeData/2023-04-08 23.01.10/model44.ckpt',
                  dataroot='./Datasets/Eval',
                  dataset_name='Lytro',
