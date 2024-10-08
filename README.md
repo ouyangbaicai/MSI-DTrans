@@ -20,7 +20,7 @@ If this work is helpful to you, please citing our work as follows:
 }
 ```
   
-<p style="textcolor:red">or</p>
+<p style="color:red">or</p>
   
 ```  
 Zhai H, Ouyang Y, Luo N, et al. MSI-DTrans: A multi-focus image fusion using multilayer semantic interaction and dynamic transformer[J]. Displays, 2024: 102837.  
