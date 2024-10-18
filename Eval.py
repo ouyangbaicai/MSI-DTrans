@@ -27,7 +27,7 @@ class Fusion:
                  # modelpath='RunTimeData/2023-04-08 23.01.10/model44.ckpt',
                  dataroot='./Datasets/Eval',
                  dataset_name='Lytro',
-                 # 修改此处即可测试其他数据集
+                 # 修改此处即可测试其他数据集 --options: 'Lytro', 'MFFW', 'MFI-WHU' AND 'Grayscale'
                  # Modify here to test other datasets
                  threshold=0.001,
                  window_size=5,
