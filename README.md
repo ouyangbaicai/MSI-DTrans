@@ -25,3 +25,8 @@ If this work is helpful to you, please citing our work as follows:
 ```  
 Zhai H, Ouyang Y, Luo N, et al. MSI-DTrans: A multi-focus image fusion using multilayer semantic interaction and dynamic transformer[J]. Displays, 2024: 102837.  
 ```  
+  
+# ---------------------Article Preview-----------------------  
+<div align="center">
+  <img src="readme_figs/network.jpg"/>
+</div>
