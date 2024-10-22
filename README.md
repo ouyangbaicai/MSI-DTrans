@@ -27,6 +27,10 @@ Zhai H, Ouyang Y, Luo N, et al. MSI-DTrans: A multi-focus image fusion using mul
 ```  
   
 # ----------------------Article Preview------------------------  
+Abstruct:
+Multi-focus image fusion (MFIF) aims to utilize multiple images with different focal lengths to fuse into a single full-focus image. This process enhances the realism and clarity of the resulting image. In this paper, a MFIF method called MSI-DTrans was proposed. On the one hand, in order to fully utilize all the effective information that the source image carries, the proposed method adopts a multilayer semantic interaction strategy to enhance the interaction of high-frequency and low-frequency information. This approach gradually mines more abstract semantic information, guiding the generation of feature maps from coarse to fine. On the other hand, a parallel multi-scale joint self-attention computation model is designed. The model adopts dynamic sense field and dynamic token embedding to overcome the performance degradation problem when dealing with multi-scale objects. This enables self-attention to integrate long-range dependencies between objects of different scales and reduces computational overhead. Numerous experimental results show that the proposed method effectively avoids image distortion, achieves better visualization results, and demonstrates good competitiveness with many state-of-the-art methods in terms of qualitative and quantitative analysis, as well as efficiency comparison.  
+
+
 <div align="center">
   <img src="figs/network.jpg"/>
 </div>
