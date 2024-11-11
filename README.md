@@ -5,11 +5,6 @@ Code for paper [MSI-DTrans: a multi-focus image fusion using multilayer semantic
 Train.py -- 训练我们的网络（Train our network）  
 Eval.py -- 利用训练好的网络参数进行图像融合（Fusion images through network）
   
-欢迎参考和引用我们的最新工作[FusionGCN](https://www.sciencedirect.com/science/article/pii/S0957417424025326) (ESWA, 2025)  
-Welcome to refer to and cite our latest work [FusionGCN](https://www.sciencedirect.com/science/article/pii/S0957417424025326) (ESWA, 2025)  
-代码已同步更新至我的仓库中  
-The code has been synchronized and updated to my repository
-  
 # ------------------Reference information--------------------  
 如果我们的工作对您有所启发，欢迎引用以下信息。  
 If this work is helpful to you, please citing our work as follows:  
@@ -39,3 +34,10 @@ Multi-focus image fusion (MFIF) aims to utilize multiple images with different f
 <div align="center">
   <img src="figs/network.jpg"/>
 </div>
+  
+# -----------------------Recommend---------------------------  
+  
+欢迎参考和引用我们的最新工作[FusionGCN](https://www.sciencedirect.com/science/article/pii/S0957417424025326) (ESWA, 2025)  
+Welcome to refer to and cite our latest work [FusionGCN](https://www.sciencedirect.com/science/article/pii/S0957417424025326) (ESWA, 2025)  
+代码已同步更新至我的仓库中  
+The code has been synchronized and updated to my repository
