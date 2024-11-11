@@ -39,5 +39,5 @@ Multi-focus image fusion (MFIF) aims to utilize multiple images with different f
   
 欢迎参考和引用我们的最新工作[FusionGCN](https://www.sciencedirect.com/science/article/pii/S0957417424025326) (ESWA, 2025)  
 Welcome to refer to and cite our latest work [FusionGCN](https://www.sciencedirect.com/science/article/pii/S0957417424025326) (ESWA, 2025)  
-代码已同步更新至我的仓库中  
+代码已同步更新至我的仓库  
 The code has been synchronized and updated to my repository
