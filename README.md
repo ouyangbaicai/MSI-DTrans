@@ -5,6 +5,19 @@ Code for paper [MSI-DTrans: a multi-focus image fusion using multilayer semantic
 Train.py -- 训练我们的网络（Train our network）  
 Eval.py -- 利用训练好的网络参数进行图像融合（Fusion images through network）
   
+# My related work related work for MFF ※
+
+<div align="center">
+
+| **Method** | **Code** | **Paper** | **Status** |
+|:----------:|:--------:|:---------:|:----------:|
+| **MSI-DTrans (2024)** | [<img src="https://img.shields.io/badge/GitHub-Repo-blue?style=for-the-badge&logo=github" alt="GitHub"/>](https://github.com/ouyangbaicai/MSI-DTrans) | [<img src="https://img.shields.io/badge/Paper-DISPLAYS-blue?style=for-the-badge" alt="Paper"/>](https://www.sciencedirect.com/science/article/abs/pii/S0141938224002014) | ✅ Published |
+| **FusionGCN (2025)** | [<img src="https://img.shields.io/badge/GitHub-Repo-blue?style=for-the-badge&logo=github" alt="GitHub"/>](https://github.com/ouyangbaicai/FusionGCN) | [<img src="https://img.shields.io/badge/Paper-ESWA-blue?style=for-the-badge" alt="Paper"/>](https://www.sciencedirect.com/science/article/pii/S0957417424025326) | ✅ Published |
+| **Frame-MFF (N/A)** | [<img src="https://img.shields.io/badge/GitHub-Repo-blue?style=for-the-badge&logo=github" alt="GitHub"/>](https://github.com/ouyangbaicai/Frame-MFF) | [<img src="https://img.shields.io/badge/(N/A)-Private-orange?style=for-the-badge" alt="(N/A)"/>](https://github.com/ouyangbaicai/Frame-MFF) | 🙅‍ Unrevealed |
+| **Text-MFF (2026）** | [<img src="https://img.shields.io/badge/GitHub-Repo-blue?style=for-the-badge&logo=github" alt="GitHub"/>](https://github.com/ouyangbaicai/Text-MFF) | [<img src="https://img.shields.io/badge/Paper-ESWA-blue?style=for-the-badge" alt="Paper"/>](https://www.sciencedirect.com/science/article/abs/pii/S0957417426002824) | ✅ Published |
+
+</div>
+  
 # Reference information  
 如果我们的工作对您有所启发，欢迎引用以下信息。  
 If this work is helpful to you, please citing our work as follows:  
