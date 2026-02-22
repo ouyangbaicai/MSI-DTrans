@@ -5,7 +5,7 @@ Code for paper [MSI-DTrans: a multi-focus image fusion using multilayer semantic
 Train.py -- 训练我们的网络（Train our network）  
 Eval.py -- 利用训练好的网络参数进行图像融合（Fusion images through network）
   
-# My related work related work for MFF ※
+# My related work in for MFF ※
 
 <div align="center">
 
