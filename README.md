@@ -13,7 +13,6 @@ Eval.py -- 利用训练好的网络参数进行图像融合（Fusion images thro
 |:----------:|:--------:|:---------:|:----------:|
 | **MSI-DTrans (2024)** | [<img src="https://img.shields.io/badge/GitHub-Repo-blue?style=for-the-badge&logo=github" alt="GitHub"/>](https://github.com/ouyangbaicai/MSI-DTrans) | [<img src="https://img.shields.io/badge/Paper-DISPLAYS-blue?style=for-the-badge" alt="Paper"/>](https://www.sciencedirect.com/science/article/abs/pii/S0141938224002014) | ✅ Published |
 | **FusionGCN (2025)** | [<img src="https://img.shields.io/badge/GitHub-Repo-blue?style=for-the-badge&logo=github" alt="GitHub"/>](https://github.com/ouyangbaicai/FusionGCN) | [<img src="https://img.shields.io/badge/Paper-ESWA-blue?style=for-the-badge" alt="Paper"/>](https://www.sciencedirect.com/science/article/pii/S0957417424025326) | ✅ Published |
-| **Frame-MFF (N/A)** | [<img src="https://img.shields.io/badge/GitHub-Repo-blue?style=for-the-badge&logo=github" alt="GitHub"/>](https://github.com/ouyangbaicai/Frame-MFF) | [<img src="https://img.shields.io/badge/(N/A)-Private-orange?style=for-the-badge" alt="(N/A)"/>](https://github.com/ouyangbaicai/Frame-MFF) | 🙅‍ Unrevealed |
 | **Text-MFF (2026）** | [<img src="https://img.shields.io/badge/GitHub-Repo-blue?style=for-the-badge&logo=github" alt="GitHub"/>](https://github.com/ouyangbaicai/Text-MFF) | [<img src="https://img.shields.io/badge/Paper-ESWA-blue?style=for-the-badge" alt="Paper"/>](https://www.sciencedirect.com/science/article/abs/pii/S0957417426002824) | ✅ Published |
 
 </div>
